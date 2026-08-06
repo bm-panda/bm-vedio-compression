@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>视频压缩 - 配置</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    padding: 20px;
+    background: #f1f5f9;
+    color: #1e293b;
+    font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    font-size: 14px;
+  }
+  .card {
+    width: 100%;
+    max-width: 448px;
+    margin: auto;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1);
+    padding: 24px;
+  }
+  h1 { margin: 0; font-size: 20px; color: #0f172a; }
+  .subtitle { margin: 4px 0 0; font-size: 13px; color: #64748b; }
+  .section-label { display: block; margin: 24px 0 8px; font-size: 12px; font-weight: 600; color: #64748b; }
+  .param-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; }
+  .param-card > * + * { margin-top: 12px; }
+  .field-label { display: block; margin-bottom: 6px; font-size: 12px; color: #64748b; }
+  .input, .select {
+    width: 100%;
+    padding: 8px 12px;
+    background: #fff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    color: inherit;
+  }
+  .input::placeholder { color: #94a3b8; }
+  .input:focus, .select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, .3);
+  }
+  .select {
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 34px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4' fill='none' stroke='%2364748b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+  }
+  .hint { margin: 6px 0 0; font-size: 12px; color: #94a3b8; }
+  .check-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .check-row label { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #334155; cursor: pointer; }
+  .check-row input[type="checkbox"] { width: 15px; height: 15px; accent-color: #2563eb; }
+  .actions { display: flex; gap: 10px; margin-top: 24px; }
+  .btn {
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 10px 0;
+  }
+  .btn-primary { flex: 1; border: 0; background: #2563eb; color: #fff; font-weight: 600; }
+  .btn-primary:hover { background: #1d4ed8; }
+  .btn-secondary { padding: 10px 20px; border: 1px solid #cbd5e1; background: transparent; color: #64748b; }
+  .btn-secondary:hover { color: #334155; border-color: #94a3b8; }
+  .error-box {
+    display: block;
+    margin-top: 16px;
+    padding: 8px 12px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    color: #dc2626;
+    font-size: 12px;
+  }
+  .hidden { display: none !important; }
+  .tips { margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0; }
+  .tip { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 12px; color: #94a3b8; }
+  .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; flex: none; }
+  .dot-green { background: #10b981; }
+  .dot-blue { background: #3b82f6; }
+  .dot-gray { background: #94a3b8; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>视频压缩</h1>
+    <p class="subtitle">保存配置后，选中视频文件，右键点击即可一键压缩</p>
+
+    <label class="section-label">压缩参数</label>
+    <div class="param-card">
+      <div>
+        <label for="compressionLevel" class="field-label">压缩强度</label>
+        <select id="compressionLevel" class="select"></select>
+        <p class="hint">CRF 越高体积越小、画质越低</p>
+      </div>
+      <div>
+        <label for="resolution" class="field-label">分辨率</label>
+        <select id="resolution" class="select"></select>
+        <p class="hint">仅当源视频高于所选分辨率时才降档，绝不放大</p>
+      </div>
+      <div>
+        <label for="audioBitrate" class="field-label">音频码率</label>
+        <select id="audioBitrate" class="select"></select>
+        <p class="hint">音频重新编码为 AAC，降码率可进一步减小体积</p>
+      </div>
+    </div>
+
+    <label class="section-label">输出目录</label>
+    <input id="outputDir" class="input" type="text" placeholder="留空则输出到视频文件所在目录">
+    <p class="hint">提示：可在文件资源管理器地址栏复制文件夹路径，粘贴到这里</p>
+
+    <div class="check-row" style="margin-top: 16px;">
+      <label><input id="overwrite" type="checkbox"> 覆盖已存在的文件</label>
+    </div>
+
+    <div class="actions">
+      <button id="saveBtn" class="btn btn-primary">保存配置</button>
+      <button id="cancelBtn" class="btn btn-secondary">取消</button>
+    </div>
+
+    <div id="errorBox" class="error-box hidden"></div>
+
+    <div class="tips">
+      <p class="tip"><span class="dot dot-green"></span>保存配置后，选中视频文件 → 右键 → 视频压缩</p>
+      <p class="tip"><span class="dot dot-blue"></span>统一输出 MP4 (H.264)，输出到源文件目录或自定义目录</p>
+      <p class="tip"><span class="dot dot-gray"></span>需通过「不忙脚本盒子」安装脚本才能使用右键功能</p>
+    </div>
+  </div>
+
+<script>
+/*__APP_DATA__*/
+
+const S = APP_DATA.saved || {};
+const D = APP_DATA.DEFAULTS || {};
+const val = (k, fb) =>
+  (S[k] !== undefined && S[k] !== null && String(S[k]).trim() !== '')
+    ? S[k]
+    : (fb !== undefined ? fb : D[k]);
+
+const $ = (id) => document.getElementById(id);
+
+function fillSelect(id, options, key) {
+  const sel = $(id);
+  const keys = Object.keys(options);
+  for (const k of keys) {
+    const o = document.createElement('option');
+    o.value = k;
+    o.textContent = options[k];
+    sel.appendChild(o);
+  }
+  const saved = String(val(key, keys[0]));
+  sel.value = saved in options ? saved : keys[0];
+}
+
+fillSelect('compressionLevel', APP_DATA.COMPRESSION_LEVEL_OPTIONS, 'compression_level');
+fillSelect('resolution', APP_DATA.RESOLUTION_OPTIONS, 'resolution');
+fillSelect('audioBitrate', APP_DATA.AUDIO_BITRATE_OPTIONS, 'audio_bitrate');
+
+// ── 回填已保存值 ──
+$('outputDir').value = S.output_dir || '';
+$('overwrite').checked = !!S.overwrite;
+
+// ── 校验（与 Python 侧规则一致；选项均来自下拉，通常不会失败） ──
+function validate() {
+  const errors = [];
+  const checks = [
+    ['compressionLevel', APP_DATA.COMPRESSION_LEVEL_OPTIONS],
+    ['resolution', APP_DATA.RESOLUTION_OPTIONS],
+    ['audioBitrate', APP_DATA.AUDIO_BITRATE_OPTIONS],
+  ];
+  for (const [id, opts] of checks) {
+    if (!(Object.prototype.hasOwnProperty.call(opts, $(id).value))) {
+      errors.push('无效的选项：' + $(id).value);
+    }
+  }
+  return errors;
+}
+
+function buildConfig() {
+  return {
+    compression_level: $('compressionLevel').value,
+    resolution: $('resolution').value,
+    audio_bitrate: $('audioBitrate').value,
+    output_dir: $('outputDir').value.trim(),
+    overwrite: $('overwrite').checked,
+  };
+}
+
+function showErrors(list) {
+  const box = $('errorBox');
+  box.textContent = list.join('；');
+  box.classList.remove('hidden');
+}
+function clearError() {
+  $('errorBox').classList.add('hidden');
+}
+
+function submit(config) {
+  if (window.webview && window.webview.resolve) {
+    window.webview.resolve(config);
+  } else {
+    console.log('[video-zip] config:', JSON.stringify(config));
+  }
+}
+function doCancel() {
+  if (window.webview && window.webview.reject) {
+    window.webview.reject('已取消');
+  } else {
+    window.close();
+  }
+}
+
+$('saveBtn').addEventListener('click', () => {
+  const errors = validate();
+  if (errors.length) { showErrors(errors); return; }
+  submit(buildConfig());
+});
+$('cancelBtn').addEventListener('click', doCancel);
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') $('saveBtn').click();
+  else if (e.key === 'Escape') doCancel();
+});
+</script>
+</body>
+</html>
