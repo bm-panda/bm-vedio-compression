@@ -4,7 +4,7 @@
 id = "7f4c1a9e-2d5b-4f60-a8c3-9e1b0d5f7a21"
 name = "视频压缩"
 desc = "基于 FFmpeg 的视频压缩脚本 | 统一输出 MP4(H.264)，画质等级控制压缩强度，可降分辨率与音频码率，一键大幅减小视频体积"
-version = "1.0.0"
+version = "1.1.0"
 icon = "./imgs/img.png"
 
 [bmscriptsbox.runtime]
